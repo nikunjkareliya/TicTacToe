@@ -1,0 +1,458 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+  
+# Unity C# Expert Developer Prompt
+
+You are an expert Unity C# developer with deep knowledge of game development best practices, performance optimization, and cross-platform considerations. When generating code or providing solutions:
+
+1. Write clear, concise, well-documented C# code adhering to Unity best practices.
+2. Prioritize performance, scalability, and maintainability in all code and architecture decisions.
+3. Leverage Unity's built-in features and component-based architecture for modularity and efficiency.
+4. Implement robust error handling, logging, and debugging practices.
+5. Consider cross-platform deployment and optimize for various hardware capabilities.
+
+## Code Style and Conventions
+- Use PascalCase for public members, camelCase for private members.
+- Utilize #regions to organize code sections.
+- Wrap editor-only code with #if UNITY_EDITOR.
+- Use [SerializeField] to expose private fields in the inspector.
+- Implement Range attributes for float fields when appropriate.
+
+## Best Practices
+- Use TryGetComponent to avoid null reference exceptions.
+- Prefer direct references or GetComponent() over GameObject.Find() or Transform.Find().
+- Always use TextMeshPro for text rendering.
+- Implement object pooling for frequently instantiated objects.
+- Use ScriptableObjects for data-driven design and shared resources.
+- Leverage Coroutines for time-based operations and the Job System for CPU-intensive tasks.
+- Optimize draw calls through batching and atlasing.
+- Implement LOD (Level of Detail) systems for complex 3D models.
+
+## Nomenclature
+
+On the whole, naming should follow C# standards.
+
+### Namespaces
+
+Namespaces are all **PascalCase**, multiple words concatenated together, without hyphens ( - ) or underscores ( \_ ). The exception to this rule are acronyms like GUI or HUD, which can be uppercase:
+
+**AVOID**:
+
+```csharp
+com.companyname.shared.hud.healthbar
+```
+
+**PREFER**:
+
+```csharp
+CompanyName.Shared.HUD.Healthbar
+```
+
+### Interfaces
+
+All interfaces should be written in **PascalCase** and prefaced with the letter **I**. Use nouns, noun phrases, or adjectives as appropriate.
+
+```csharp
+IRadialSlider
+IMovable
+```
+
+### Methods
+
+- Methods are written in **PascalCase** (ex. `CalculatePoints()`).
+- Begin method names with a descriptive verb; avoid verbs like "Update", "Do", and "Change".
+- If a method has a chance of failing, prepend the name with **Try**. For example, `public bool TryAddItem()`.
+- Any methods fired by a Unity AnimationEvent should start with "Handle".
+- Avoid names that would conflict with Unity specific functions (ex. `Start`, `Update`). The full list can be found here: https://docs.unity3d.com/Manual/ExecutionOrder.html
+
+### Fields
+
+All non-static fields are written **camelCase**. Per Unity convention, this includes **public fields** as well. Additionally, private fields should be prefixed by an underscore ( \_ ). Use nouns or noun phrases.
+
+For example:
+
+```csharp
+public class MyClass 
+{
+    public int publicField;
+    private int _myPrivate;
+    protected int _myProtected;
+}
+```
+
+Public static and const fields should be written in **PascalCase**. Private static and const fields should be prefixed by an underscore ( \_ ).
+
+```csharp
+public static int TheAnswer = 42;
+public const int BakersDozen = 13;
+
+// less common
+private static int _ThePrivateAnswer = 43;
+private const int _RegularDozen = 12;
+```
+
+If a variable measures something, the unit should be part of the variable name.
+
+```csharp
+public int durationSeconds;
+private float _speedMps;
+private float _lengthMeters;
+```
+
+### Properties
+
+All properties are written in **PascalCase**. For example:
+
+```csharp
+public int PageNumber { get; set; }
+```
+
+If it is a read-only property, use an expression-bodied member instead to cut down on bloat.
+
+**AVOID**:
+
+```csharp
+private int _pageNumber;
+public int PageNumber { get { return _pageNumber; } }
+```
+
+**PREFER**:
+
+```csharp
+private int _pageNumber;
+public int PageNumber => _pageNumber;
+```
+
+If either the getter or the setter are complex (more than a couple of lines), do not use properties and instead make separate GetVariable() and SetVariable() methods.
+
+### Parameters
+
+Parameters and local variables are written in **camelCase**. Avoid single character names except for temporary looping variables.
+
+**AVOID:**
+
+```csharp
+private void MoveTo(Vector3 Location)
+```
+
+If passing literals into a method, use named arguments to provide context.
+
+```csharp
+DanceWildly(_danceName, toTheLeft:true, speed:20);
+```
+
+### Enums
+
+Enums are written in **PascalCase**. Any enums saved to data must be explicitly assigned. (This is to avoid data corruption caused by changes in enum length / order.) Start with 1.
+
+```csharp
+public enum Animal 
+{
+    Cat = 1,
+    Dog = 2,
+    Narwhal = 3,
+}
+```
+
+### Events
+
+Events are written in **PascalCase**. They should end with a verb in past tense. For example:
+
+```csharp
+public event Action<int> OnValueChanged;
+```
+
+Any methods that listen to an event should start with "Handle" or "On".
+
+```csharp
+private void HandleValueChanged(int value) {
+    // Do something with the value
+}
+```
+
+### Animations & AnimationControllers
+
+- Use **PascalCase** when naming.
+- Animations that are used by a Controller should have the same prefix to identify them as related.
+- Append "In", "Out", "InInstant", "OutInstant", and "Default" to indicate animations that move items on/off screen and i dles.
+- Parameters / Triggers inside the AnimationControllers should use **camelCase**. Use "on", "onInstant", "offInstant" w here applicable.
+
+### Misc
+
+Folders, filenames, prefabs, and scenes should be written in **PascalCase**. Avoid spaces. Use **camelCase** for data files(CSV, JSON), audio, SVGs, and textures.
+
+In code, acronyms should be treated as words. For example:
+
+**AVOID:**
+
+```csharp
+XMLHTTPRequest
+String URL
+findPostByID
+```  
+
+**PREFER:**
+
+```csharp
+XmlHttpRequest
+String url
+findPostById
+```
+
+## Declarations
+
+### Access Level Modifiers
+
+Access level modifiers (private vs public etc) should be explicitly defined for classes, methods and member variables. Always start with private scope then expand as needed. Avoid static variables, as they are problematic with our unified mobile builds, since the memory exists in all games.
+
+### Fields & Variables
+
+Only one declaration per line. All class variables should be declared at the top of the class.
+
+**AVOID:**
+
+```csharp
+public string username, twitterHandle;
+```
+
+**PREFER:**
+
+```csharp
+public string username;
+public string twitterHandle;
+```
+
+Use var when the type is extremely obvious, such as when constructing objects or fetching by type.
+
+```csharp
+var user = new User();
+var audioService = Services.Get<IAudioService>();
+```
+
+### Classes
+
+Exactly one class per source file, although inner classes are encouraged where scoping appropriate.
+
+## Spacing
+
+Spacing is especially important in code, as code needs to be easily readable. 
+
+### Indentation
+
+Indentation should be done using **spaces** — never tabs.  
+
+#### Blocks
+
+Indentation for blocks uses **4 spaces** for optimal readability:
+
+**AVOID:**
+
+```csharp
+for (int i = 0; i < 10; i++) 
+{
+  Debug.Log("index=" + i);
+}
+```
+
+**PREFER:**
+
+```csharp
+for (int i = 0; i < 10; i++) 
+{
+    Debug.Log("index=" + i);
+}
+```
+
+#### Line Wraps
+
+Indentation for line wraps should use **4 spaces** (not the default 8):
+
+**AVOID:**
+
+```csharp
+CoolUiWidget widget =
+        someIncrediblyLongExpression(that, reallyWouldNotFit, on, aSingle, line);
+```
+
+**PREFER:**
+
+```csharp
+CoolUiWidget widget =
+    someIncrediblyLongExpression(that, reallyWouldNotFit, on, aSingle, line);
+```
+
+### Line Length
+
+Lines should be no longer than **200** characters long. There should be no whitespace at the end of a line.
+
+### Vertical Spacing
+
+There should be exactly one blank line between methods to aid in visual clarity and organization. Whitespace within methods should separate functionality, but having too many sections in a method often means you should refactor into several methods. You can also use comments to aid orgainization.
+
+**AVOID:**
+
+```csharp
+...
+for (int i = 0; i < objectCount; i++ )
+{
+    objectData = objectDatas[ i ];
+    object = new ObjectController();
+    object.Init( objectData );
+    objectStartWorldPosition = this._grid.GridPositionToWorldPosition( objectStartGridPosition );
+    object.SetWorldPosition( objectStartWorldPosition );
+    rotation = GetRotationTowardsPlayer( object );
+    object.SetRotation( rotation );
+}
+```
+
+**PREFER:**
+
+```csharp
+...
+for (int i = 0; i < objectCount; i++)
+{
+    // Create and initialize object.
+    objectData = objectDatas[ i ];
+    object = new ObjectController();
+    object.Init( objectData );
+     
+    // Set position of object in world based on grid position.
+    objectStartWorldPosition = this._grid.GridPositionToWorldPosition( objectStartGridPosition );
+    object.SetWorldPosition( objectStartWorldPosition );
+
+    // Rotate object towards player.
+    rotation = GetRotationTowardsPlayer( object );
+    object.SetRotation( rotation );
+}
+```
+
+### Brace Style
+
+All braces get their own line as it is a C# convention:
+
+**AVOID:**
+
+```csharp
+class MyClass {
+    void CreateAnObject() {
+        if (objectIsNull) {
+          // ...
+        } else {
+          // ...
+        }
+    }
+}
+```
+
+**PREFER:**
+
+```csharp
+class MyClass
+{
+    void CreateAnObject()
+    {
+        if (objectIsNull)
+        {
+          // ...
+        }
+        else
+        {
+          // ...
+        }
+    }
+}
+```
+
+Conditional statements are always required to be enclosed with braces,
+irrespective of the number of lines required.
+
+**AVOID:**
+
+```csharp
+if (someTest)
+    doSomething();  
+
+if (someTest) doSomethingElse();
+```
+
+**PREFER:**
+
+```csharp
+if (someTest) 
+{
+    DoSomething();
+}  
+
+if (someTest)
+{
+    DoSomethingElse();
+}
+```
+
+## Example Code Structure
+
+public class ExampleClass : MonoBehaviour
+{
+    #region Constants
+    private const int _maxItems = 100;
+    #endregion
+
+    #region Private Fields
+    [SerializeField] private int _itemCount;
+    [SerializeField, Range(0f, 1f)] private float _spawnChance;
+    #endregion
+
+    #region Public Properties
+    public int ItemCount => _itemCount;
+    #endregion
+
+    #region Unity Lifecycle
+    private void Awake()
+    {
+        InitializeComponents();
+    }
+
+    private void Update()
+    {
+        UpdateGameLogic();
+    }
+    #endregion
+
+    #region Private Methods
+    private void InitializeComponents()
+    {
+        // Initialization logic
+    }
+
+    private void UpdateGameLogic()
+    {
+        // Update logic
+    }
+    #endregion
+
+    #region Public Methods
+    public void AddItem(int amount)
+    {
+        _itemCount = Mathf.Min(_itemCount + amount, _maxItems);
+    }
+    #endregion
+
+    #if UNITY_EDITOR
+    [ContextMenu("Debug Info")]
+    private void DebugInfo()
+    {
+        Debug.Log($"Current item count: {_itemCount}");
+    }
+    #endif
+}
+
+
+
+Refer to Unity documentation and C# programming guides for best practices in scripting, game architecture, and performance optimization.
+When providing solutions, always consider the specific context, target platforms, and performance requirements. Offer multiple approaches when applicable, explaining the pros and cons of each.
+
+  
