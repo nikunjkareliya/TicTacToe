@@ -1,0 +1,64 @@
+# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+# Ignore build output folders
+/[Bb]uild*/
+/[Bb]uilds*/
+
+# Ignore Unity cache and generated files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Uu]serSettings/
+MemoryCaptures/
+*.pidb
+*.svd
+*.userprefs
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.booproj
+*.log
+
+# Ignore packages cache
+Packages/com.unity.collab-proxy/
+Packages/com.unity.package-manager-ui/
+
+# Ignore autosave scenes and backup files
+*.autosave
+*.bak
+*.backup
+*.old
+
+# Ignore Crash Reports and Logs
+sysinfo.txt
+crash.dmp
+error.log
+report.xml
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Windows system files
+Thumbs.db
+desktop.ini
+
+# Ignore IDE settings (VS, Rider, etc.)
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Ignore Cursor-specific settings (if stored in local config)
+.cursor/
+.cursor-settings.json
+
+# Ignore Plastic SCM metadata (not needed in Cursor context)
+.plastic/
+*.plastic*
+
+# Optional: ignore generated Script Assemblies (if not debugging)
+*.dll
+*.pdb
+*.mdb
