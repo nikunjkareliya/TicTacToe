@@ -12,19 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d19de8dbab582324cbe34c00d7bf3623, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  _audioEnabled: 1
-  _musicEnabled: 1
-  _soundEffectsEnabled: 1
-  _masterVolume: 1
-  _musicVolume: 0.7
-  _soundEffectsVolume: 0.8
-  _defaultAIDifficulty: 1
-  _defaultPlayerSymbol: 0
-  _aiGoesFirst: 0
-  _aiMoveDelay: 0.5
-  _vibrationEnabled: 1
-  _showTutorial: 1
-  _showDebugInfo: 0
-  _defaultPlayerName: Player
-  _turnTimeLimit: 10
-  _autoMatchmaking: 1
+  _defaultGameMode: 0
+  _defaultAIDifficulty: 0
+  _turnDelay: 0.5
+  _enableAnimations: 1
+  _animationDuration: 0.3
+  _playerXColor: {r: 0, g: 0, b: 1, a: 1}
+  _playerOColor: {r: 1, g: 0, b: 0, a: 1}
+  _winningLineColor: {r: 0, g: 1, b: 0, a: 1}
+  _drawColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _aiThinkingTimeMin: 500
+  _aiThinkingTimeMax: 2000

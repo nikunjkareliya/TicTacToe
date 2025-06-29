@@ -2,13 +2,11 @@ namespace TicTacToe
 {
     public enum GameState
     {
-        Initializing,
+        Loading,
         MainMenu,
-        GameSetup,
-        Playing,
-        GameOver,
+        MatchMaking,
+        Gameplay,
         Paused,
-        Quitting
+        Result
     }
-
 }

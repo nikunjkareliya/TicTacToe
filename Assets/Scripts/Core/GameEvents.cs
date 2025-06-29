@@ -4,6 +4,17 @@ using UnityEngine;
 namespace TicTacToe
 {
     /// <summary>
+    /// Transition types for UI screen animations
+    /// </summary>
+    public enum TransitionType
+    {
+        Instant,
+        Fade,
+        Slide,
+        Scale
+    }
+
+    /// <summary>
     /// Central event system for the TicTacToe game.
     /// Provides a decoupled communication system between different game components.
     /// </summary>
@@ -35,6 +46,54 @@ namespace TicTacToe
         /// Raised when the game ends in a draw
         /// </summary>
         public static event Action OnGameDraw;
+
+        #endregion
+
+        #region UI Navigation Events
+
+        /// <summary>
+        /// Raised when a popup should be shown
+        /// </summary>
+        public static event Action<string> OnShowPopup;
+
+        /// <summary>
+        /// Raised when a popup should be hidden
+        /// </summary>
+        public static event Action<string> OnHidePopup;
+
+        /// <summary>
+        /// Raised when all popups should be hidden
+        /// </summary>
+        public static event Action OnHideAllPopups;
+
+        /// <summary>
+        /// Raised when a screen transition should occur
+        /// </summary>
+        public static event Action<GameState, TransitionType> OnScreenTransitionRequested;
+
+        #endregion
+
+        #region Scene Management Events
+
+        /// <summary>
+        /// Raised when a scene should be loaded
+        /// </summary>
+        public static event Action<string> OnLoadScene;
+
+        /// <summary>
+        /// Raised when a scene should be unloaded
+        /// </summary>
+        public static event Action<string> OnUnloadScene;
+
+        /// <summary>
+        /// Raised when loading progress updates
+        /// </summary>
+        public static event Action<float> OnLoadingProgressUpdated;
+
+        /// <summary>
+        /// Raised when scene loading is complete
+        /// </summary>
+        public static event Action OnSceneLoadComplete;
 
         #endregion
 
@@ -156,6 +215,18 @@ namespace TicTacToe
         public static void RaiseGameEnded(GameResult result) => OnGameEnded?.Invoke(result);
         public static void RaisePlayerWon(PlayerType player) => OnPlayerWon?.Invoke(player);
         public static void RaiseGameDraw() => OnGameDraw?.Invoke();
+
+        // UI Navigation Events
+        public static void RaiseShowPopup(string popupName) => OnShowPopup?.Invoke(popupName);
+        public static void RaiseHidePopup(string popupName) => OnHidePopup?.Invoke(popupName);
+        public static void RaiseHideAllPopups() => OnHideAllPopups?.Invoke();
+        public static void RaiseScreenTransitionRequested(GameState targetState, TransitionType transitionType) => OnScreenTransitionRequested?.Invoke(targetState, transitionType);
+
+        // Scene Management Events
+        public static void RaiseLoadScene(string sceneName) => OnLoadScene?.Invoke(sceneName);
+        public static void RaiseUnloadScene(string sceneName) => OnUnloadScene?.Invoke(sceneName);
+        public static void RaiseLoadingProgressUpdated(float progress) => OnLoadingProgressUpdated?.Invoke(progress);
+        public static void RaiseSceneLoadComplete() => OnSceneLoadComplete?.Invoke();
 
         // Turn Management Events
         public static void RaisePlayerTurnChanged(PlayerType player) => OnPlayerTurnChanged?.Invoke(player);
